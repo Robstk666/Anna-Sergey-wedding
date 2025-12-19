@@ -45,8 +45,7 @@ export const VIDEOS: VideoItem[] = [
 ];
 
 /**
- * Просто список категорий. 
- * Код сам найдет фото в папках assets/photos/{id}/ под именами 01.jpg, 02.jpg...
+ * Просто список категорий.
  */
 export const PHOTO_CATEGORIES: PhotoCategory[] = [
   { id: 'ceremony', name: 'ЦЕРЕМОНИЯ' },
@@ -54,3 +53,33 @@ export const PHOTO_CATEGORIES: PhotoCategory[] = [
   { id: 'party', name: 'ВЕЧЕРИНКА' },
   { id: 'details', name: 'ДЕТАЛИ' }
 ];
+
+export const PHOTO_MANIFEST: Record<string, string[]> = {
+  "ceremony": [
+    "./assets/photos/ceremony/01.jpg",
+    "./assets/photos/ceremony/02.jpg",
+    "./assets/photos/ceremony/03.jpg",
+    "./assets/photos/ceremony/04.jpg"
+  ],
+  "party": [
+    "./assets/photos/party/01.jpg",
+    "./assets/photos/party/02.jpg",
+    "./assets/photos/party/03.jpg",
+    "./assets/photos/party/04.jpg",
+    "./assets/photos/party/05.jpg",
+    "./assets/photos/party/06.jpg"
+  ],
+  "furshet": [
+    "./assets/photos/furshet/01.jpg",
+    "./assets/photos/furshet/02.jpg",
+    "./assets/photos/furshet/03.jpg",
+    "./assets/photos/furshet/04.jpg",
+    "./assets/photos/furshet/05.jpg",
+    "./assets/photos/furshet/06.jpg"
+  ],
+  "details": [
+    "./assets/photos/details/01.jpg",
+    "./assets/photos/details/02.jpg",
+    "./assets/photos/details/03.jpg"
+  ]
+};

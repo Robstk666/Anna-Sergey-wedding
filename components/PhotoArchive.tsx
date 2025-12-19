@@ -1,59 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
-import { PHOTO_CATEGORIES } from '../constants';
+import React, { useState } from 'react';
+import { PHOTO_CATEGORIES, PHOTO_MANIFEST } from '../constants';
 import { PhotoCategory } from '../types';
 import PhotoModal from './PhotoModal';
 
-// Хелпер для проверки существования файла через HEAD-запрос (чтобы не качать само фото)
-const checkFileExists = async (url: string): Promise<boolean> => {
-  try {
-    const response = await fetch(url, { method: 'HEAD' });
-    return response.ok;
-  } catch {
-    return false;
-  }
-};
-
 const PhotoArchive: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<PhotoCategory | null>(null);
-  const [categoriesData, setCategoriesData] = useState<Record<string, { photos: string[], count: number }>>({});
-  const [isScanning, setIsScanning] = useState(true);
-
-  useEffect(() => {
-    const scanAllCategories = async () => {
-      const results: Record<string, { photos: string[], count: number }> = {};
-      
-      for (const cat of PHOTO_CATEGORIES) {
-        const foundPhotos: string[] = [];
-        let index = 1;
-        let searching = true;
-
-        // Сканируем до первого отсутствующего файла (лимит 200 на случай ошибок)
-        while (searching && index <= 200) {
-          const fileName = index.toString().padStart(2, '0');
-          const path = `./assets/photos/${cat.id}/${fileName}.jpg`;
-          
-          const exists = await checkFileExists(path);
-          if (exists) {
-            foundPhotos.push(path);
-            index++;
-          } else {
-            searching = false;
-          }
-        }
-        
-        results[cat.id] = {
-          photos: foundPhotos,
-          count: foundPhotos.length
-        };
-      }
-      
-      setCategoriesData(results);
-      setIsScanning(false);
-    };
-
-    scanAllCategories();
-  }, []);
 
   return (
     <section className="py-24 px-6 md:px-12 lg:px-24 bg-[#fcfcfc]">
@@ -79,21 +31,22 @@ const PhotoArchive: React.FC = () => {
 
           <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-8">
             {PHOTO_CATEGORIES.map((cat) => {
-              const data = categoriesData[cat.id];
-              const previewImg = data?.photos[0] || `./assets/photos/${cat.id}/01.jpg`;
-              const photoCount = data?.count ?? 0;
+              const photos = PHOTO_MANIFEST[cat.id] || [];
+              const previewImg = photos[0] || `./assets/photos/${cat.id}/01.jpg`;
+              const photoCount = photos.length;
 
               return (
                 <div 
                   key={cat.id} 
-                  onClick={() => data && setSelectedCategory({ ...cat, photos: data.photos, count: data.count })}
+                  onClick={() => setSelectedCategory({ ...cat, photos, count: photoCount })}
                   className="group relative h-64 border border-gray-100 bg-white overflow-hidden cursor-pointer flex flex-col"
                 >
                   <div className="absolute inset-0 z-0">
                     <img 
                       src={previewImg} 
                       alt={cat.name} 
-                      className={`w-full h-full object-cover grayscale transition-all duration-700 scale-110 group-hover:scale-100 ${data ? 'opacity-20 group-hover:opacity-40' : 'opacity-5'}`}
+                      loading="lazy"
+                      className={`w-full h-full object-cover grayscale transition-all duration-700 scale-110 group-hover:scale-100 opacity-20 group-hover:opacity-40`}
                     />
                   </div>
                   
@@ -106,8 +59,8 @@ const PhotoArchive: React.FC = () => {
                   
                   <div className="p-4 flex justify-between items-center text-[10px] tracking-widest text-gray-400 font-light bg-white">
                     <span className="group-hover:text-black transition-colors">ОТКРЫТЬ АРХИВ</span>
-                    <span className={`transition-opacity duration-1000 ${isScanning ? 'opacity-30' : 'opacity-100'}`}>
-                      {isScanning ? '...' : `${photoCount} ФОТО`}
+                    <span className="opacity-100">
+                      {photoCount} ФОТО
                     </span>
                   </div>
                 </div>
