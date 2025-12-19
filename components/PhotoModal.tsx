@@ -1,5 +1,6 @@
 
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 interface PhotoModalProps {
@@ -16,8 +17,8 @@ const PhotoModal: React.FC<PhotoModalProps> = ({ categoryName, photos, onClose }
     };
   }, []);
 
-  return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col animate-in fade-in duration-500">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] bg-white flex flex-col animate-in fade-in duration-500">
       <nav className="p-8 flex justify-between items-center border-b border-gray-100">
         <div>
           <span className="text-xs uppercase tracking-[0.3em] text-gray-400 block mb-1">Архив фотографий</span>
@@ -69,7 +70,8 @@ const PhotoModal: React.FC<PhotoModalProps> = ({ categoryName, photos, onClose }
           </div>
         )}
       </footer>
-    </div>
+    </div>,
+    document.body
   );
 };
 
