@@ -39,6 +39,7 @@ const PhotoModal: React.FC<PhotoModalProps> = ({ categoryName, photos, onClose }
               <img 
                 src={photo} 
                 alt={`${categoryName} photo ${idx}`} 
+                loading="lazy"
                 className="h-full w-auto object-contain grayscale transition-all duration-700 hover:grayscale-0 shadow-2xl"
               />
               <p className="mt-4 text-[10px] text-gray-400 font-light uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
